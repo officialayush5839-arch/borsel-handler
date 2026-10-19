@@ -1,0 +1,24 @@
+{
+  "Table": [
+    {
+      "NEWSID": "bse_ann_101",
+      "SCRIP_CD": 532540,
+      "SLONGNAME": "Tata Consultancy Services Ltd",
+      "HEADLINE": "Outcome of Board Meeting - Audited Financial Results and Dividend",
+      "NEWSSUB": "The Board of Directors has recommended a final dividend of Rs 28 per equity share.",
+      "CATEGORYNAME": "Financial Results",
+      "DissemDT": "2026-04-15T17:00:00",
+      "ATTACHMENTNAME": "tcs_financial_results_q4.pdf"
+    },
+    {
+      "NEWSID": "bse_ann_102",
+      "SCRIP_CD": 500510,
+      "SLONGNAME": "Larsen & Toubro Ltd",
+      "HEADLINE": "L&T Bags Mega Order for its Hydrocarbon Business",
+      "NEWSSUB": "Larsen & Toubro has received a letter of award for an offshore project.",
+      "CATEGORYNAME": "Company Update",
+      "DissemDT": "2026-04-16T11:00:00",
+      "ATTACHMENTNAME": ""
+    }
+  ]
+}
