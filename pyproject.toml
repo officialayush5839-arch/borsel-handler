@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "borsel-handler"
+version = "2.0.0"
+description = "Institutional AI-Powered Indian Financial Intelligence & Market Data Engineering Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Ayush Vishwakarma", email = "officialayush5839@gmail.com" }
+]
+keywords = [
+    "indian-stock-market",
+    "financial-intelligence",
+    "data-engineering",
+    "nse-india",
+    "bse-india",
+    "rbi",
+    "sebi",
+    "fastapi",
+    "react",
+    "postgresql",
+    "parquet",
+    "algorithmic-trading",
+    "quantitative-finance",
+    "rag"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy>=2.0.36",
+    "alembic>=1.14.0",
+    "httpx>=0.27.0",
+    "feedparser>=6.0.11",
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.3.0",
+    "pandas>=2.2.0",
+    "pyarrow>=17.0.0",
+    "python-dateutil>=2.9.0",
+    "python-dotenv>=1.0.1",
+    "cachetools>=5.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.8.0",
+    "black>=24.0.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [
+    "upstream",
+    ".git",
+    "node_modules",
+]
