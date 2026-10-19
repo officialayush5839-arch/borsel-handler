@@ -34,4 +34,6 @@ def get_db() -> Generator[Session, None, None]:
 
 def init_db():
     """Create all tables in the configured database."""
+    import borsel_handler.storage.models  # noqa: F401 - ensure models are registered
     Base.metadata.create_all(bind=engine)
+
