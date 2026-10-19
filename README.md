@@ -12,6 +12,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%20--%2018-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Apache Parquet](https://img.shields.io/badge/Apache%20Parquet-PyArrow%2024.0-50b7f5?style=for-the-badge&logo=apache&logoColor=white)](https://parquet.apache.org/)
 [![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
+[![Live Data Verified](https://img.shields.io/badge/Live%20Data-977%20Records%20Verified-brightgreen?style=for-the-badge&logo=rss&logoColor=white)](docs/live_data_verification_report.md)
 [![Tests: 105 Passed](https://img.shields.io/badge/Pytest-105%20Passed%20(100%25)-success?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Security: CWE-1236 Hardened](https://img.shields.io/badge/Security-CWE--1236%20Safe-brightgreen?style=for-the-badge&logo=securityscorecard&logoColor=white)](SECURITY.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
@@ -24,6 +25,7 @@
 [Architecture](#-system-architecture) •
 [Quickstart](#-quickstart-in-60-seconds) •
 [Data Coverage](#-data-source-coverage-matrix) •
+[Live Verification Report](docs/live_data_verification_report.md) •
 [AI & Quant Integration](#-downstream-ai--quant-pipeline-integration) •
 [API Reference](#-rest-api-documentation) •
 [Contributing](#-contributing)
@@ -123,6 +125,9 @@ flowchart TD
 | **Financial Express** | `rss` | Economy & Market Intelligence | FE Industry & Markets RSS | ✅ Verified |
 | **NDTV Profit / Business** | `rss` | Corporate News & Earnings | NDTV Profit Corporate Wire | ✅ Verified |
 | **CNBC TV18** | `rss` | Breaking Business News | CNBC TV18 Markets Feed | ✅ Verified |
+
+> [!TIP]
+> **Empirical Live Ingestion Audit:** Read our comprehensive [Live Data Ingestion & Dynamic Collection Verification Report](docs/live_data_verification_report.md) with verifiable proofs, real-time disclosure URLs (NSE, RBI, SEBI, PIB, ET), dynamic deduplication stats, and reproduction commands.
 
 ---
 
