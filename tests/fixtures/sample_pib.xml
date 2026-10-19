@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Press Information Bureau - Ministry of Finance</title>
+    <link>https://pib.gov.in</link>
+    <description>Economic Policies, GST Updates, and Cabinet Approvals from Government of India</description>
+    <item>
+      <title>Cabinet Approves Enhanced PLI Scheme Outlay for Semiconductor and Electronics Manufacturing</title>
+      <link>https://pib.gov.in/PressReleasePage.aspx?PRID=2019485</link>
+      <description>Union Cabinet chaired by Prime Minister approves additional budgetary allocation of Rs 15,000 crore under Production Linked Incentive for tech hardware.</description>
+      <pubDate>Fri, 17 Apr 2026 12:30:00 GMT</pubDate>
+      <guid isPermaLink="false">pib_mof_2019485</guid>
+    </item>
+    <item>
+      <title>Gross Goods and Services Tax Revenue Reaches Record High of Rs 1.95 Lakh Crore for March 2026</title>
+      <link>https://pib.gov.in/PressReleasePage.aspx?PRID=2019486</link>
+      <description>Ministry of Finance reports 11.5% year-on-year growth in monthly GST collections driven by robust domestic economic activity.</description>
+      <pubDate>Fri, 17 Apr 2026 16:00:00 GMT</pubDate>
+      <guid isPermaLink="false">pib_mof_2019486</guid>
+    </item>
+  </channel>
+</rss>
