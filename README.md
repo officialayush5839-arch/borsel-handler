@@ -4,12 +4,14 @@
 
 ### **Institutional AI-Powered Indian Financial Intelligence & Market Data Engineering Platform**
 
+[![CI](https://github.com/officialayush5839-arch/borsel-handler/actions/workflows/ci.yml/badge.svg)](https://github.com/officialayush5839-arch/borsel-handler/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%20--%2018-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Apache Parquet](https://img.shields.io/badge/Apache%20Parquet-PyArrow%2024.0-50b7f5?style=for-the-badge&logo=apache&logoColor=white)](https://parquet.apache.org/)
+[![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
 [![Tests: 105 Passed](https://img.shields.io/badge/Pytest-105%20Passed%20(100%25)-success?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Security: CWE-1236 Hardened](https://img.shields.io/badge/Security-CWE--1236%20Safe-brightgreen?style=for-the-badge&logo=securityscorecard&logoColor=white)](SECURITY.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
@@ -126,12 +128,30 @@ flowchart TD
 
 ## ⚡ Quickstart in 60 Seconds
 
-### Prerequisites
+### Option A: 1-Click Launch with Docker Compose (Recommended)
+Spin up PostgreSQL 16, the FastAPI backend, Alembic migrations, and the React frontend with a single command:
+
+```bash
+git clone https://github.com/officialayush5839-arch/borsel-handler.git
+cd borsel-handler
+
+# Start all microservices in background
+docker compose up -d
+```
+- **React Financial Dashboard:** `http://localhost:5173`
+- **FastAPI Backend & Docs:** `http://localhost:8000/docs`
+- **PostgreSQL Database:** `localhost:5432` (`borsel_db`)
+
+---
+
+### Option B: Local Setup (Python & Node)
+
+#### Prerequisites
 - **Python 3.11+** (Python 3.11, 3.12, 3.13, and 3.14 fully supported)
 - **Node.js 20+** and npm 10+
 - **PostgreSQL 14+** (Optional: defaults to SQLite for immediate zero-config local development)
 
-### 1. Clone & Setup Environment
+#### 1. Clone & Setup Environment
 ```bash
 git clone https://github.com/officialayush5839-arch/borsel-handler.git
 cd borsel-handler
@@ -140,7 +160,7 @@ cd borsel-handler
 cp .env.example .env
 ```
 
-### 2. Install Dependencies
+#### 2. Install Dependencies
 ```bash
 # Backend dependencies
 python -m venv .venv
@@ -153,13 +173,13 @@ npm install
 cd ..
 ```
 
-### 3. Initialize Database & Run Migrations
+#### 3. Initialize Database & Run Migrations
 ```bash
 # Run versioned Alembic migrations
 alembic upgrade head
 ```
 
-### 4. Start Backend Server & Frontend UI
+#### 4. Start Backend Server & Frontend UI
 In your first terminal (FastAPI Backend):
 ```bash
 uvicorn borsel_handler.api.app:app --reload --host 0.0.0.0 --port 8000
