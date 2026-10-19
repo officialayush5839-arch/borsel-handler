@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "an_un_id": "nse_ann_501",
+      "symbol": "TCS",
+      "sm_name": "Tata Consultancy Services Limited",
+      "subject": "Audited Financial Results For The Quarter And Year Ended March 31, 2026",
+      "attchmntText": "Press release and investor presentation for audited Q4 financial results.",
+      "bfDissTime": "15-Apr-2026 17:05:00",
+      "attchmntFile": "TCS_Results_Q4_2026.pdf"
+    },
+    {
+      "an_un_id": "nse_ann_502",
+      "symbol": "INFY",
+      "sm_name": "Infosys Limited",
+      "subject": "Infosys Collaborates with Leading Global Bank for Cloud Modernization",
+      "attchmntText": "Strategic multi-year contract for AI and cloud digital transformation.",
+      "bfDissTime": "16-Apr-2026 12:30:00",
+      "attchmntFile": "INFY_PressRelease_Bank.pdf"
+    }
+  ]
+}
