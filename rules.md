@@ -121,3 +121,15 @@
 2. Update all seven project-control documents whenever architectural, requirement, or implementation state changes occur.
 3. Never weaken or delete existing tests to force a passing status.
 4. Present transparent, honest skepticism disclaimers in all task completion reports.
+
+---
+
+## 11. GitHub CI/CD Pipeline Verification & Auto-Remediation
+
+1. **Mandatory Post-Push Pipeline Check:** Whenever code is committed and pushed to GitHub, the developer/agent MUST immediately monitor and verify the remote GitHub Actions pipeline (`gh run list`, `gh run watch`).
+2. **Zero Toleration of Broken Pipelines:** Never end a development turn, declare an issue fixed, or mark a task complete while the remote pipeline is in a failing or red state.
+3. **Immediate Remediation Cycle:** If the remote pipeline fails or reports errors:
+   - Immediately inspect the failure logs (`gh run view <run-id> --log-failed`).
+   - Diagnose the root cause and implement the corrective fix.
+   - Commit and push the fix (adhering to separate commits per file where requested).
+   - Re-verify until the remote pipeline passes 100% green.
