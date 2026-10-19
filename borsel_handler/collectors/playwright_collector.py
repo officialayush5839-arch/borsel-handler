@@ -30,6 +30,10 @@ try:
     from playwright.async_api import async_playwright, Browser, BrowserContext, Page
     PLAYWRIGHT_AVAILABLE = True
 except ImportError:
+    async_playwright = None
+    Browser = None
+    BrowserContext = None
+    Page = None
     PLAYWRIGHT_AVAILABLE = False
 
 
