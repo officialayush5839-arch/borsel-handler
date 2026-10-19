@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software or financial intelligence dataset in your research or project, please cite it as below."
+authors:
+  - family-names: "Vishwakarma"
+    given-names: "Ayush"
+title: "Borsel Handler: AI-Powered Indian Financial Intelligence and Market Data Engineering Platform"
+version: 2.0.0
+date-released: 2026-10-19
+url: "https://github.com/officialayush5839-arch/borsel-handler"
+keywords:
+  - "indian-stock-market"
+  - "financial-intelligence"
+  - "data-engineering"
+  - "nse-india"
+  - "bse-india"
+  - "rbi"
+  - "sebi"
+  - "parquet"
+  - "algorithmic-trading"
+  - "rag"
