@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Reserve Bank of India - Press Releases</title>
+    <link>https://www.rbi.org.in</link>
+    <description>Official Monetary Policy Decisions, Circulars, and Statements from RBI</description>
+    <item>
+      <title>Monetary Policy Committee Maintains Repo Rate at 6.50 Percent</title>
+      <link>https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=58102</link>
+      <description>The Monetary Policy Committee decided to keep the policy repo rate unchanged at 6.50% to align inflation with the 4% target.</description>
+      <pubDate>Wed, 15 Apr 2026 11:00:00 GMT</pubDate>
+      <guid isPermaLink="false">rbi_pr_58102</guid>
+    </item>
+    <item>
+      <title>RBI Issues Revised Regulatory Guidelines for Commercial Banks on Lending Standards</title>
+      <link>https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=58103</link>
+      <description>Reserve Bank of India releases updated prudential framework applicable to commercial lenders including HDFC Bank and State Bank of India.</description>
+      <pubDate>Wed, 15 Apr 2026 14:30:00 GMT</pubDate>
+      <guid isPermaLink="false">rbi_pr_58103</guid>
+    </item>
+  </channel>
+</rss>
