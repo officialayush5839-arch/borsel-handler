@@ -11,6 +11,7 @@ from sqlalchemy.pool import StaticPool
 from borsel_handler.api.app import app
 from borsel_handler.api.dependencies import get_db_session
 from borsel_handler.storage.database import Base
+import borsel_handler.storage.models  # noqa: F401 - register all tables
 
 
 # Setup in-memory test database override with StaticPool
@@ -178,33 +179,37 @@ def test_platform_stats_and_sources_api():
 
 def test_trigger_ingestion_security_and_auth(monkeypatch):
     """Verifies that trigger endpoint requires valid X-API-Key when API_SECRET_KEY is configured."""
+    from unittest.mock import AsyncMock, patch
     from borsel_handler.config import settings
 
-    # 1. When secret key is set, unauthorized requests must receive 401
-    monkeypatch.setattr(settings, "API_SECRET_KEY", "prod_admin_secret_99")
+    with patch("borsel_handler.scheduler.runner.CollectionRunner.run_all", new_callable=AsyncMock) as mock_run:
+        mock_run.return_value = []
 
-    unauthed_resp = client.post("/api/v1/ingest/trigger?lookback_hours=12")
-    assert unauthed_resp.status_code == 401
-    assert "Unauthorized" in unauthed_resp.json()["detail"]
+        # 1. When secret key is set, unauthorized requests must receive 401
+        monkeypatch.setattr(settings, "API_SECRET_KEY", "prod_admin_secret_99")
 
-    bad_key_resp = client.post(
-        "/api/v1/ingest/trigger?lookback_hours=12",
-        headers={"X-API-Key": "wrong_key"}
-    )
-    assert bad_key_resp.status_code == 401
+        unauthed_resp = client.post("/api/v1/ingest/trigger?lookback_hours=12")
+        assert unauthed_resp.status_code == 401
+        assert "Unauthorized" in unauthed_resp.json()["detail"]
 
-    # 2. When valid X-API-Key is provided, request succeeds with 200
-    authed_resp = client.post(
-        "/api/v1/ingest/trigger?lookback_hours=12",
-        headers={"X-API-Key": "prod_admin_secret_99"}
-    )
-    assert authed_resp.status_code == 200
-    assert authed_resp.json()["status"] == "collection_initiated"
+        bad_key_resp = client.post(
+            "/api/v1/ingest/trigger?lookback_hours=12",
+            headers={"X-API-Key": "wrong_key"}
+        )
+        assert bad_key_resp.status_code == 401
 
-    # 3. When API_SECRET_KEY is empty (dev mode), request succeeds without key
-    monkeypatch.setattr(settings, "API_SECRET_KEY", "")
-    dev_resp = client.post("/api/v1/ingest/trigger?lookback_hours=12")
-    assert dev_resp.status_code == 200
+        # 2. When valid X-API-Key is provided, request succeeds with 200
+        authed_resp = client.post(
+            "/api/v1/ingest/trigger?lookback_hours=12",
+            headers={"X-API-Key": "prod_admin_secret_99"}
+        )
+        assert authed_resp.status_code == 200
+        assert authed_resp.json()["status"] == "collection_initiated"
+
+        # 3. When API_SECRET_KEY is empty (dev mode), request succeeds without key
+        monkeypatch.setattr(settings, "API_SECRET_KEY", "")
+        dev_resp = client.post("/api/v1/ingest/trigger?lookback_hours=12")
+        assert dev_resp.status_code == 200
 
 
 def test_pandas_export_endpoint():
