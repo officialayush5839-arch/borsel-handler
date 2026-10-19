@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:finnhub.io)",
+      "WebFetch(domain:stocknewsapi.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.marketaux.com)",
+      "WebFetch(domain:developers.newsfilter.io)",
+      "WebFetch(domain:docs.perplexity.ai)",
+      "WebFetch(domain:pythoninvest.com)",
+      "WebFetch(domain:newsdata.io)",
+      "WebFetch(domain:developer.factset.com)",
+      "WebFetch(domain:www.truedata.in)",
+      "WebFetch(domain:newsapi.org)",
+      "WebFetch(domain:rss.feedspot.com)",
+      "WebFetch(domain:www.finedgeapi.com)",
+      "WebFetch(domain:indianapi.in)",
+      "WebFetch(domain:eodhd.com)",
+      "WebFetch(domain:pulse.zerodha.com)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Ansh Varshney\\\\Desktop\\\\News-fetcher\" -Force -Recurse)",
+      "Bash(Select-Object -Property FullName, PSIsContainer)",
+      "Bash(Sort-Object FullName)",
+      "Bash(npm create *)",
+      "Bash(python -m venv .venv)",
+      "Bash(.venv\\\\Scripts\\\\pip install *)"
+    ]
+  }
+}
