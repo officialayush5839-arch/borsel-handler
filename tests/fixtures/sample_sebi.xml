@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Securities and Exchange Board of India - Regulatory Updates</title>
+    <link>https://www.sebi.gov.in</link>
+    <description>SEBI Circulars, Regulations, Adjudication Orders, and Investor Advisories</description>
+    <item>
+      <title>SEBI Modifies Master Circular on Surveillance and Risk Containment for Equity Derivatives</title>
+      <link>https://www.sebi.gov.in/legal/circulars/apr-2026/equity-derivatives-surveillance_81203.html</link>
+      <description>SEBI mandates calibrated position limits and additional margin requirements for index options and single-stock futures.</description>
+      <pubDate>Thu, 16 Apr 2026 10:15:00 GMT</pubDate>
+      <guid isPermaLink="false">sebi_circ_81203</guid>
+    </item>
+    <item>
+      <title>Adjudication Order in respect of Non-Compliance with LODR Regulations by Listed Entities</title>
+      <link>https://www.sebi.gov.in/enforcement/orders/apr-2026/lodr-penalty-order_81204.html</link>
+      <description>Penalty imposed under Section 15HB of SEBI Act for delayed disclosure of material board meeting decisions regarding dividend distribution.</description>
+      <pubDate>Thu, 16 Apr 2026 15:45:00 GMT</pubDate>
+      <guid isPermaLink="false">sebi_order_81204</guid>
+    </item>
+  </channel>
+</rss>
