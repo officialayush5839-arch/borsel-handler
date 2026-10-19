@@ -30,12 +30,12 @@ CURATED_RSS_FEEDS = [
     ("Business Standard Co",     "https://www.business-standard.com/rss/companies-101.rss"),
     ("Mint Markets",             "https://www.livemint.com/rss/markets"),
     ("Mint Companies",           "https://www.livemint.com/rss/companies"),
-    ("NDTV Profit",              "https://www.ndtvprofit.com/rss"),
     ("BusinessLine Markets",     "https://www.thehindubusinessline.com/markets/?service=rss"),
     ("BusinessLine Economy",     "https://www.thehindubusinessline.com/economy/?service=rss"),
-    ("Reuters India",            "https://feeds.reuters.com/reuters/INbusinessNews"),
-    ("Financial Express",        "https://www.financialexpress.com/feed/"),
-    ("CNBC TV18",                "https://www.cnbctv18.com/rss/market.xml"),
+    ("Moneycontrol Top News",    "https://www.moneycontrol.com/rss/MCtopnews.xml"),
+    ("Moneycontrol Markets",     "https://www.moneycontrol.com/rss/marketreports.xml"),
+    ("Financial Express Markets","https://www.financialexpress.com/market/feed/"),
+    ("Financial Express Economy","https://www.financialexpress.com/economy/feed/"),
 ]
 
 USER_AGENT = (
