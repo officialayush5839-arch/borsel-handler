@@ -297,6 +297,15 @@ def get_news_compat(
         else:
             supply_items.append(item_dict)
 
+    # Order newest first and cap for high-performance responsive browser rendering
+    direct_items.sort(key=lambda x: x["published_at"], reverse=True)
+    macro_items.sort(key=lambda x: x["published_at"], reverse=True)
+    supply_items.sort(key=lambda x: x["published_at"], reverse=True)
+
+    direct_items = direct_items[:100]
+    macro_items = macro_items[:50]
+    supply_items = supply_items[:50]
+
     total = len(direct_items) + len(supply_items) + len(macro_items)
 
     return {
