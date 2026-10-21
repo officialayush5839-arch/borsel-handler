@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { NewsItem } from "../types/news";
 import NewsCard from "./NewsCard";
 
@@ -45,20 +46,24 @@ const ACCENT_BAR: Record<string, string> = {
 
 interface Props {
   category: "direct" | "supply_chain" | "macro";
-  items: NewsItem[];
+  items?: NewsItem[];
   isLast?: boolean;
 }
 
-export default function NewsSection({ category, items, isLast = false }: Props) {
-  if (items.length === 0) return null;
+export default function NewsSection({ category, items = [], isLast = false }: Props) {
+  const [visibleCount, setVisibleCount] = useState(25);
+  const safeItems = Array.isArray(items) ? items : [];
+  if (safeItems.length === 0) return null;
 
-  const cfg = SECTION_CONFIG[category];
+  const cfg = SECTION_CONFIG[category] ?? SECTION_CONFIG.direct;
+  const visibleItems = safeItems.slice(0, visibleCount);
+  const remaining = safeItems.length - visibleCount;
 
   return (
     <section className="mb-0">
       {/* Section header band */}
       <div className={`flex items-center gap-4 px-5 py-4 ${cfg.headerBg} border ${cfg.borderColor} rounded-t-xl`}>
-        <div className={`w-1 h-9 rounded-full shrink-0 ${ACCENT_BAR[category]}`} />
+        <div className={`w-1 h-9 rounded-full shrink-0 ${ACCENT_BAR[category] ?? "bg-blue-600"}`} />
         <div className="flex-1 min-w-0">
           <h2 className={`text-sm font-bold uppercase tracking-wide ${cfg.labelColor}`}>
             {cfg.label}
@@ -66,17 +71,29 @@ export default function NewsSection({ category, items, isLast = false }: Props) 
           <p className="text-xs text-slate-500 mt-0.5">{cfg.description}</p>
         </div>
         <span className={`text-xs font-bold px-3 py-1 rounded-full border shrink-0 ${cfg.countClass}`}>
-          {items.length} {items.length === 1 ? "article" : "articles"}
+          {safeItems.length} {safeItems.length === 1 ? "article" : "articles"}
         </span>
       </div>
 
       {/* Cards */}
       <div className="border-x border-b border-slate-200 rounded-b-xl bg-white divide-y divide-slate-100">
-        {items.map((item, idx) => (
-          <div key={`${item.url}-${idx}`} className="p-4">
+        {visibleItems.map((item, idx) => (
+          <div key={`${item.id ?? item.url}-${idx}`} className="p-4">
             <NewsCard item={item} />
           </div>
         ))}
+
+        {remaining > 0 && (
+          <div className="p-4 bg-slate-50 text-center">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + 25)}
+              className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 shadow-sm transition-colors"
+            >
+              Show More Articles ({remaining} remaining)
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Divider between sections, not after the last one */}
