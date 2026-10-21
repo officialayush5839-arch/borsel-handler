@@ -44,8 +44,9 @@ export const api = {
   getStocks(): Promise<Stock[]> {
     return request<Stock[]>("/api/stocks");
   },
-  getNews(symbol: string, timerange: string): Promise<NewsResponse> {
-    return request<NewsResponse>(`/api/news?symbol=${encodeURIComponent(symbol)}&timerange=${timerange}`);
+  getNews(symbol: string, timerange: string, refresh = false): Promise<NewsResponse> {
+    const refreshParam = refresh ? "&refresh=true" : "";
+    return request<NewsResponse>(`/api/news?symbol=${encodeURIComponent(symbol)}&timerange=${timerange}${refreshParam}`);
   },
   getStats(): Promise<PlatformStats> {
     return request<PlatformStats>("/api/v1/stats");
