@@ -29,7 +29,13 @@ function AppLogo() {
 }
 
 export default function App() {
-  const [authed, setAuthed] = useState(() => !!sessionStorage.getItem("site_password"));
+  const [authed, setAuthed] = useState(() => {
+    try {
+      return !!sessionStorage.getItem("site_password");
+    } catch {
+      return false;
+    }
+  });
   const [activeTab, setActiveTab] = useState<"feed" | "search" | "health">("feed");
 
   // Stock feed state
