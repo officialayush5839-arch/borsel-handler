@@ -3,9 +3,11 @@ FastAPI Routes for Borsel Handler Platform
 Implements complete REST API suite satisfying Section 14 of Mega Prompt 2.
 """
 import io
+import logging
 from datetime import datetime, timezone
 from typing import List, Optional, Literal
 from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, Header, Response
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from borsel_handler.config import settings
@@ -16,9 +18,13 @@ from borsel_handler.core.models import (
 )
 from borsel_handler.data.stocks import NIFTY_50
 from borsel_handler.data.resolver import CompanyResolver, SECTORS
+from borsel_handler.data.dependency_map import DEPENDENCY_MAP
+from borsel_handler.collectors.nse import NSEAnnouncementCollector
 from borsel_handler.scheduler.runner import CollectionRunner
 from borsel_handler.storage.models import CollectionLog, NewsRecord
 from borsel_handler.storage.repository import NewsRepository
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -247,17 +253,29 @@ def auth_compat():
 
 
 @router.get("/api/news")
-def get_news_compat(
+async def get_news_compat(
     symbol: str = Query(..., description="NSE ticker symbol e.g. MARUTI"),
     timerange: str = Query("48h", description="One of: 24h, 48h, 72h, 1w, 2w, all"),
+    refresh: bool = Query(False, description="Trigger live collection scan"),
+    background_tasks: BackgroundTasks = None,
     db: Session = Depends(get_db_session),
 ):
-    """Compatibility endpoint for React frontend backed by persistent DB."""
+    """Compatibility endpoint for React frontend backed by persistent DB with live intelligence."""
     from datetime import timedelta
     sym = symbol.upper()
     stock_meta = next((s for s in NIFTY_50 if s["symbol"] == sym), None)
     if not stock_meta:
         raise HTTPException(status_code=404, detail=f"Stock '{symbol}' not found")
+
+    # If live refresh requested, collect fresh corporate announcements and RSS headlines
+    if refresh:
+        try:
+            nse_collector = NSEAnnouncementCollector(index_tag="equities")
+            live_records = await nse_collector.fetch(cutoff=datetime.now(timezone.utc) - timedelta(hours=48))
+            for rec in live_records:
+                NewsRepository.insert_record(db, rec)
+        except Exception as exc:
+            logger.warning("Live announcement collection error: %s", exc)
 
     deltas = {
         "24h": timedelta(hours=24),
@@ -274,28 +292,153 @@ def get_news_compat(
 
     records = q.all()
 
+    dep_config = DEPENDENCY_MAP.get(sym, {})
+    direct_kws = [k.lower() for k in dep_config.get("direct_keywords", [sym, stock_meta["name"]]) if k]
+    related_companies = dep_config.get("related_companies", {})
+    commodity_kws = [k.lower() for k in dep_config.get("commodity_keywords", []) if k]
+    macro_kws = [k.lower() for k in dep_config.get("macro_keywords", []) if k]
+    stock_sector = (stock_meta.get("sector") or "").lower()
+
     direct_items = []
     supply_items = []
     macro_items = []
 
     for r in records:
-        item_dict = {
-            "id": r.id,
-            "title": r.title,
-            "snippet": r.snippet or r.title,
-            "url": r.canonical_url or r.original_url,
-            "source": r.source_name,
-            "source_type": r.source_type,
-            "published_at": r.published_at.isoformat(),
-            "category": "direct" if r.symbol == sym else ("supply_chain" if r.category in ("order_win", "capex_expansion") else "macro"),
-            "why_it_matters": f"{r.category.replace('_', ' ').title()} - {r.source_name}",
-        }
-        if r.symbol == sym:
-            direct_items.append(item_dict)
-        elif r.sector == stock_meta.get("sector"):
-            macro_items.append(item_dict)
-        else:
-            supply_items.append(item_dict)
+        text = f"{r.title or ''} {r.snippet or ''} {r.company_name or ''} {r.symbol or ''}".lower()
+
+        # 1. Direct Company News
+        is_direct = False
+        if r.symbol and (r.symbol.upper() == sym or r.symbol.upper() == sym.replace("-", "")):
+            is_direct = True
+        elif any(dk in text for dk in direct_kws):
+            is_direct = True
+
+        if is_direct:
+            direct_items.append({
+                "id": r.id,
+                "title": r.title,
+                "snippet": r.snippet or r.title,
+                "url": r.canonical_url or r.original_url,
+                "source": r.source_name,
+                "source_type": r.source_type,
+                "published_at": r.published_at.isoformat(),
+                "category": "direct",
+                "why_it_matters": f"Direct Corporate Announcement - {r.source_name}",
+            })
+            continue
+
+        # 2. Supply Chain & Related (Suppliers, Competitors, Inputs)
+        matched_supply = False
+        for comp_name, reason in related_companies.items():
+            comp_lower = comp_name.lower()
+            comp_sym = comp_name.upper().replace(" ", "").replace("-", "")
+            if (
+                comp_lower in text
+                or (r.company_name and comp_lower in r.company_name.lower())
+                or (r.symbol and comp_sym in r.symbol.upper().replace("-", ""))
+            ):
+                supply_items.append({
+                    "id": r.id,
+                    "title": r.title,
+                    "snippet": r.snippet or r.title,
+                    "url": r.canonical_url or r.original_url,
+                    "source": r.source_name,
+                    "source_type": r.source_type,
+                    "published_at": r.published_at.isoformat(),
+                    "category": "supply_chain",
+                    "why_it_matters": f"{comp_name}: {reason}",
+                })
+                matched_supply = True
+                break
+
+        if matched_supply:
+            continue
+
+        for ckw in commodity_kws:
+            if ckw in text:
+                supply_items.append({
+                    "id": r.id,
+                    "title": r.title,
+                    "snippet": r.snippet or r.title,
+                    "url": r.canonical_url or r.original_url,
+                    "source": r.source_name,
+                    "source_type": r.source_type,
+                    "published_at": r.published_at.isoformat(),
+                    "category": "supply_chain",
+                    "why_it_matters": f"Input Cost ({ckw.title()}): Supply chain & margin signal",
+                })
+                matched_supply = True
+                break
+
+        if matched_supply:
+            continue
+
+        # 3. Sector & Macro Forces
+        matched_macro = False
+        for mkw in macro_kws:
+            if mkw in text:
+                macro_items.append({
+                    "id": r.id,
+                    "title": r.title,
+                    "snippet": r.snippet or r.title,
+                    "url": r.canonical_url or r.original_url,
+                    "source": r.source_name,
+                    "source_type": r.source_type,
+                    "published_at": r.published_at.isoformat(),
+                    "category": "macro",
+                    "why_it_matters": f"{stock_meta.get('sector', 'Macro')} Indicator ({mkw.title()})",
+                })
+                matched_macro = True
+                break
+
+        if matched_macro:
+            continue
+
+        if (
+            r.sector
+            and r.sector.lower() == stock_sector
+            and r.category in ("macro_economic", "regulatory_filing", "policy_update", "monetary_policy")
+        ):
+            macro_items.append({
+                "id": r.id,
+                "title": r.title,
+                "snippet": r.snippet or r.title,
+                "url": r.canonical_url or r.original_url,
+                "source": r.source_name,
+                "source_type": r.source_type,
+                "published_at": r.published_at.isoformat(),
+                "category": "macro",
+                "why_it_matters": f"{stock_meta.get('sector', 'Sector')} Industry & Policy Movement",
+            })
+            matched_macro = True
+
+    # Fallback: if zero direct items in recent window, check historical company records
+    if len(direct_items) == 0 and timerange != "all":
+        older_records = (
+            db.query(NewsRecord)
+            .filter(
+                or_(
+                    NewsRecord.symbol == sym,
+                    NewsRecord.symbol == sym.replace("-", ""),
+                    NewsRecord.company_name == stock_meta["name"],
+                )
+            )
+            .order_by(NewsRecord.published_at.desc())
+            .limit(10)
+            .all()
+        )
+        for r in older_records:
+            direct_items.append({
+                "id": r.id,
+                "title": r.title,
+                "snippet": r.snippet or r.title,
+                "url": r.canonical_url or r.original_url,
+                "source": r.source_name,
+                "source_type": r.source_type,
+                "published_at": r.published_at.isoformat(),
+                "category": "direct",
+                "why_it_matters": f"Prior Company Announcement - {r.source_name}",
+            })
 
     # Order newest first and cap for high-performance responsive browser rendering
     direct_items.sort(key=lambda x: x["published_at"], reverse=True)
