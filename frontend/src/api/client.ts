@@ -9,7 +9,11 @@ import type {
 const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
 
 function getPassword(): string {
-  return sessionStorage.getItem("site_password") ?? "";
+  try {
+    return sessionStorage.getItem("site_password") ?? "";
+  } catch {
+    return "";
+  }
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
