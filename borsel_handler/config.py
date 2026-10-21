@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     MAX_RETRIES: int = 3
     RETRY_BACKOFF_SECONDS: float = 2.0
     COLLECTION_INTERVAL_MINUTES: int = 60
+    ENABLE_AUTO_INGEST: bool = False
+    AUTO_INGEST_INITIAL_DELAY_SECONDS: int = 5
 
     # Optional 3rd party API keys
     MARKETAUX_API_KEY: str = ""
