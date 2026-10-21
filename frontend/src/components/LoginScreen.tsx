@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function LoginScreen({ onSuccess }: Props) {
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("admin");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -16,7 +16,9 @@ export default function LoginScreen({ onSuccess }: Props) {
     setError(false);
     const ok = await validatePassword(password);
     if (ok) {
-      sessionStorage.setItem("site_password", password);
+      try {
+        sessionStorage.setItem("site_password", password);
+      } catch (_) {}
       onSuccess();
     } else {
       setError(true);
@@ -28,15 +30,16 @@ export default function LoginScreen({ onSuccess }: Props) {
     <div className="min-h-screen bg-[#f1f5f9] flex flex-col items-center justify-center">
       <div className="bg-white border border-slate-200 rounded-2xl shadow-lg p-10 w-full max-w-sm">
         <div className="flex items-center gap-2.5 mb-8 justify-center">
-          <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          <span className="text-slate-800 font-bold text-base tracking-tight">StockPulse India</span>
+          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
+            BH
+          </div>
+          <span className="text-slate-800 font-bold text-base tracking-tight">Borsel Handler</span>
         </div>
 
         <h1 className="text-lg font-semibold text-slate-800 text-center mb-1">Welcome back</h1>
-        <p className="text-sm text-slate-400 text-center mb-7">Enter your access password to continue</p>
+        <p className="text-xs text-slate-400 text-center mb-7">
+          Enter access password (default: <span className="font-semibold text-blue-600">admin</span>)
+        </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
@@ -45,7 +48,7 @@ export default function LoginScreen({ onSuccess }: Props) {
               type="password"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(false); }}
-              placeholder="Enter access password"
+              placeholder="Enter access password (default: admin)"
               autoFocus
               className={`w-full px-4 py-2.5 border rounded-lg text-sm text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                 error ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"
