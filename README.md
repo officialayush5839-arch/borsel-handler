@@ -133,13 +133,17 @@ flowchart TD
 
 ## ⚡ Quickstart in 60 Seconds
 
-### Option A: 1-Click Launch on Windows (`run.bat`)
+### Option A: 1-Click Launch on Windows (`run.bat` / `run.ps1`)
 Double-click `run.bat` in the project root or run from Command Prompt / PowerShell:
 
 ```cmd
+# Command Prompt or Double-Click:
 run.bat
+
+# PowerShell:
+.\run.ps1
 ```
-*Automatically runs Alembic migrations, starts FastAPI with localhost ingestion automation on port 8000, boots the React financial UI on port 5173, and launches your browser to `http://localhost:5173`!*
+*Automatically detects Python & Node runtimes, applies Alembic migrations, starts FastAPI with localhost ingestion automation on port 8000, boots the React financial UI on port 5173, and launches your browser to `http://localhost:5173`!*
 
 ---
 
