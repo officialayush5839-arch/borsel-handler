@@ -53,7 +53,36 @@ interface Props {
 export default function NewsSection({ category, items = [], isLast = false }: Props) {
   const [visibleCount, setVisibleCount] = useState(25);
   const safeItems = Array.isArray(items) ? items : [];
-  if (safeItems.length === 0) return null;
+  if (safeItems.length === 0) {
+    if (category === "direct") {
+      const cfg = SECTION_CONFIG.direct;
+      return (
+        <section className="mb-8">
+          <div className={`flex items-center gap-4 px-5 py-4 ${cfg.headerBg} border ${cfg.borderColor} rounded-t-xl`}>
+            <div className={`w-1 h-9 rounded-full shrink-0 ${ACCENT_BAR[category] ?? "bg-blue-600"}`} />
+            <div className="flex-1 min-w-0">
+              <h2 className={`text-sm font-bold uppercase tracking-wide ${cfg.labelColor}`}>
+                {cfg.label}
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">{cfg.description}</p>
+            </div>
+            <span className={`text-xs font-bold px-3 py-1 rounded-full border shrink-0 ${cfg.countClass}`}>
+              0 articles
+            </span>
+          </div>
+          <div className="bg-white border-x border-b border-blue-200 rounded-b-xl p-6 text-center">
+            <p className="text-xs text-slate-600 font-medium">
+              No direct company announcements in this time window.
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              Check Supply Chain & Related or Macro signals below, adjust the time range, or click <strong>Refresh Intelligence</strong> for a live exchange scan.
+            </p>
+          </div>
+        </section>
+      );
+    }
+    return null;
+  }
 
   const cfg = SECTION_CONFIG[category] ?? SECTION_CONFIG.direct;
   const visibleItems = safeItems.slice(0, visibleCount);
