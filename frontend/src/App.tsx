@@ -74,12 +74,12 @@ export default function App() {
     }
   }, [selectedSymbol, timerange]);
 
-  async function handleFetch() {
+  async function handleFetch(isRefresh = false) {
     if (!selectedSymbol) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await api.getNews(selectedSymbol, timerange);
+      const data = await api.getNews(selectedSymbol, timerange, isRefresh);
       setNewsData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -213,7 +213,7 @@ export default function App() {
 
                 <button
                   type="button"
-                  onClick={handleFetch}
+                  onClick={() => handleFetch(true)}
                   disabled={loading || !selectedSymbol}
                   className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 rounded-lg transition-colors flex items-center gap-2 shadow-sm"
                 >
@@ -230,7 +230,7 @@ export default function App() {
             {error && (
               <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 text-xs text-rose-700 flex items-center justify-between">
                 <span>{error}</span>
-                <button onClick={handleFetch} className="font-semibold underline ml-2">Retry</button>
+                <button onClick={() => handleFetch()} className="font-semibold underline ml-2">Retry</button>
               </div>
             )}
 
