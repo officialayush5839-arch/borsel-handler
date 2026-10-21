@@ -221,3 +221,79 @@ def test_pandas_export_endpoint():
     assert "id,title,snippet,published_at,source_name" in csv_text
 
 
+def test_get_news_dependency_categorization_and_refresh():
+    """
+    Verifies that /api/news accurately segregates direct, supply chain, and macro news
+    using DEPENDENCY_MAP, and completely excludes unrelated articles.
+    """
+    # 1. Unrelated news (AI / foreign tech)
+    unrelated = {
+        "title": "Anthropic Closes Massive $45 Billion Funding Round",
+        "snippet": "Venture investors pour capital into frontier model labs.",
+        "original_url": "https://techcrunch.com/anthropic-45b",
+        "canonical_url": "https://techcrunch.com/anthropic-45b",
+        "published_at": datetime.now(timezone.utc).isoformat(),
+        "source_name": "TechCrunch",
+        "source_type": "rss",
+        "source_record_id": "tc_anthropic_999",
+        "company_name": "Anthropic PBC",
+        "symbol": "ANTH",
+        "sector": "Technology",
+        "category": "private_equity",
+    }
+    client.post("/api/v1/records", json=unrelated)
+
+    # 2. Competitor / Supply chain for BAJAJ-AUTO (Hero MotoCorp)
+    hero_competitor = {
+        "title": "Hero MotoCorp Reports Record Festive Sales",
+        "snippet": "Strong two-wheeler demand recorded in rural and semi-urban markets.",
+        "original_url": "https://economictimes.indiatimes.com/hero-motocorp-festive-sales",
+        "canonical_url": "https://economictimes.indiatimes.com/hero-motocorp-festive-sales",
+        "published_at": datetime.now(timezone.utc).isoformat(),
+        "source_name": "Economic Times",
+        "source_type": "rss",
+        "source_record_id": "et_hero_001",
+        "company_name": "Hero MotoCorp",
+        "symbol": "HEROMOTOCO",
+        "sector": "Auto",
+        "category": "order_win",
+    }
+    client.post("/api/v1/records", json=hero_competitor)
+
+    # 3. Commodity input signal for BAJAJ-AUTO (Aluminium)
+    aluminium_cost = {
+        "title": "Aluminium Prices Jump on Global Smelter Curtailments",
+        "snippet": "Key raw material costs rise for automotive manufacturers.",
+        "original_url": "https://bloomberg.com/aluminium-prices-rally",
+        "canonical_url": "https://bloomberg.com/aluminium-prices-rally",
+        "published_at": datetime.now(timezone.utc).isoformat(),
+        "source_name": "Bloomberg",
+        "source_type": "rss",
+        "source_record_id": "bbg_aluminium_001",
+        "company_name": None,
+        "symbol": None,
+        "sector": "Commodities",
+        "category": "macro_economic",
+    }
+    client.post("/api/v1/records", json=aluminium_cost)
+
+    # Fetch news for BAJAJ-AUTO
+    resp = client.get("/api/news?symbol=BAJAJ-AUTO&timerange=48h")
+    assert resp.status_code == 200
+    data = resp.json()
+    cats = data["categories"]
+
+    supply_titles = [item["title"] for item in cats["supply_chain"]]
+    direct_titles = [item["title"] for item in cats["direct"]]
+    macro_titles = [item["title"] for item in cats["macro"]]
+
+    # Verify: Hero MotoCorp and Aluminium MUST be in supply chain
+    assert any("Hero MotoCorp" in t for t in supply_titles)
+    assert any("Aluminium" in t for t in supply_titles)
+
+    # Verify: Anthropic MUST NOT appear in direct, supply chain, or macro
+    all_titles = direct_titles + supply_titles + macro_titles
+    assert not any("Anthropic" in t for t in all_titles)
+
+
+
