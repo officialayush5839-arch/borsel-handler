@@ -133,7 +133,17 @@ flowchart TD
 
 ## ⚡ Quickstart in 60 Seconds
 
-### Option A: 1-Click Launch with Docker Compose (Recommended)
+### Option A: 1-Click Launch on Windows (`run.bat`)
+Double-click `run.bat` in the project root or run from Command Prompt / PowerShell:
+
+```cmd
+run.bat
+```
+*Automatically runs Alembic migrations, starts FastAPI with localhost ingestion automation on port 8000, boots the React financial UI on port 5173, and launches your browser to `http://localhost:5173`!*
+
+---
+
+### Option B: 1-Click Launch with Docker Compose
 Spin up PostgreSQL 16, the FastAPI backend, Alembic migrations, and the React frontend with a single command:
 
 ```bash
@@ -149,7 +159,7 @@ docker compose up -d
 
 ---
 
-### Option B: Local Setup (Python & Node)
+### Option C: Manual Local Setup (Python & Node)
 
 #### Prerequisites
 - **Python 3.11+** (Python 3.11, 3.12, 3.13, and 3.14 fully supported)
