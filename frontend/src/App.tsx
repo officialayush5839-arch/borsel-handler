@@ -75,6 +75,12 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
+      if (stocks.length === 0) {
+        const stockList = await api.getStocks().catch(() => []);
+        if (stockList.length > 0) {
+          setStocks(stockList);
+        }
+      }
       const data = await api.getNews(selectedSymbol, timerange, isRefresh);
       setNewsData(data);
     } catch (err) {
